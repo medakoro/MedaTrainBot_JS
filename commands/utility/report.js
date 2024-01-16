@@ -24,19 +24,18 @@ module.exports = {
             name: addreportchannel,
             parent: '1195712382798930022',
         });
-        const embeds = [
-            new EmbedBuilder()
-            .setName('インシデントが発生しました。')
-            .setDescription('対応してください。')
-            .addFields(
-                { name: 'インシデント報告名:', value: addreportchannel}
-            )
-            .setFooter({ text: channelMention(channel.id) })
-            .setColor(Colors.Blue)
-        ];
-        await interaction. client.channels.cache.get('1195747894704209960').send({
+        await interaction.client.channels.cache.get('1195747894704209960').send({
             content: userMention('1074320635855126538'),
-            embeds
+            embeds: [
+                new EmbedBuilder()
+                .setTitle('インシデントが発生しました。')
+                .setDescription('対応してください。')
+                .addFields(
+                    { name: 'インシデント報告名:', value: addreportchannel}
+                )
+                .setFooter({ text: channelMention(channel.id) })
+                .setColor(Colors.Blue)
+            ]
         });
 	},
 };
