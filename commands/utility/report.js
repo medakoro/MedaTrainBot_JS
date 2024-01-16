@@ -19,11 +19,20 @@ module.exports = {
             ),
 	async execute(interaction) {
         const addreportchannel = interaction.options.getString("addreportchannel");    //IDには、「.setName」で指定した名前を指定
-		await interaction.reply(`インシデント報告用チャンネルを作成しました。チャンネル名は: ${addreportchannel}です。カテゴリー:インシデントログで確認してください`);
         const channel = await interaction.guild.channels.create({
             name: addreportchannel,
             parent: '1195712382798930022',
         });
+		await interaction.reply({ embeds: [
+            new EmbedBuilder()
+            .setTitle('インシデント報告用チャンネルを作成しました。')
+            .setDescription('カテゴリー:インシデントログで確認してください')
+            .addFields(
+                { name: 'チャンネル名:', value: channelMention(channel.id)}
+            )
+            .setColor(Colors.Blue)
+        ]
+    });
         await interaction.client.channels.cache.get('1195747894704209960').send({
             content: userMention('1074320635855126538'),
             embeds: [
