@@ -18,7 +18,7 @@ module.exports = {
             )
             ),
 	async execute(interaction) {
-        var addreportchannel = interaction.options.getString("addreportchannel");    //IDには、「.setName」で指定した名前を指定
+        const addreportchannel = interaction.options.getString("addreportchannel");    //IDには、「.setName」で指定した名前を指定
 		await interaction.reply(`インシデント報告用チャンネルを作成しました。チャンネル名は: ${addreportchannel}です。カテゴリー:インシデントログで確認してください`);
         await interaction. client.channels.cache.get('1195747894704209960').send({
             content: userMantion('1074320635855126538'),
@@ -35,6 +35,6 @@ module.exports = {
         await interaction.guild.channels.create({
             name: addreportchannel,
             parent: '1195712382798930022',
-        })
+        });
 	},
 };
