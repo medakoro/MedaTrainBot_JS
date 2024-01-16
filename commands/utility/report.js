@@ -31,9 +31,8 @@ module.exports = {
                 .setTitle('インシデントが発生しました。')
                 .setDescription('対応してください。')
                 .addFields(
-                    { name: 'インシデント報告名:', value: addreportchannel}
+                    { name: 'インシデント報告名:', value: channelMention(channel.id)}
                 )
-                .setFooter({ text: channelMention(channel.id) })
                 .setColor(Colors.Blue)
             ]
         });
