@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors } = require('discord.js');
+const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,6 +29,12 @@ module.exports = {
             const channel = await interaction.guild.channels.create({
                 name: addreportchannel,
                 parent: '1195712382798930022',
+                permissionOverwrites: [
+                    {
+                      id: interaction.user.id,
+                      allow: [PermissionsBitField.Flags.ViewChannel]
+                    }
+                  ]
             });
             await interaction.reply({ embeds: [
                 new EmbedBuilder()
@@ -37,7 +43,7 @@ module.exports = {
                 .addFields(
                     { name: 'チャンネル名:', value: channelMention(channel.id)}
                 )
-                .setColor(Colors.Blue)
+                .setColor(Colors.Red)
             ]
         });
             await interaction.client.channels.cache.get('1195747894704209960').send({
