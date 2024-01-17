@@ -31,6 +31,10 @@ module.exports = {
                 parent: '1195712382798930022',
                 permissionOverwrites: [
                     {
+                        id: '@everyone',
+                        dany: [PermissionsBitField.Flags.ViewChannel]
+                    },
+                    {
                       id: interaction.user.id,
                       allow: [PermissionsBitField.Flags.ViewChannel]
                     }
