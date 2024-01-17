@@ -35,6 +35,10 @@ module.exports = {
                         deny: [PermissionsBitField.Flags.ViewChannel]
                     },
                     {
+                        id: '1193112813518995538',
+                        allow: [PermissionsBitField.Flags.ViewChannel]
+                    },
+                    {
                       id: interaction.user.id,
                       allow: [PermissionsBitField.Flags.ViewChannel]
                     }
