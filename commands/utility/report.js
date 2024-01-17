@@ -32,7 +32,7 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: '1192783677386674256',
-                        dany: [PermissionsBitField.Flags.ViewChannel]
+                        deny: [PermissionsBitField.Flags.ViewChannel]
                     },
                     {
                       id: interaction.user.id,
