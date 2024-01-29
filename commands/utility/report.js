@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField, ChatInputCommandInteraction } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,6 +22,10 @@ module.exports = {
             .setName("closed")
             .setDescription("インシデント報告チャンネルを閉じる")
             ),
+    /**
+     * インタラクションが作成されたときに呼ばれるイベントのリスナー関数
+     * @param {ChatInputCommandInteraction} interaction
+     */
 	async execute(interaction) {
         if (interaction.options.getSubcommand() === 'add') {
 			
@@ -82,7 +86,10 @@ module.exports = {
                         .setColor(Colors.Blue)
                     ]
                 });
-                await interaction.channel.delete();
+
+                setTimeout(async () => {
+                    await interaction.channel.delete();
+                }, 3e3);
             }
 		}
 	},

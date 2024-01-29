@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, Colors } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, Colors, ChatInputCommandInteraction } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,28 +21,33 @@ module.exports = {
             .setDescription('select the target.')
             )
             ),
+    /**
+     * インタラクションが作成されたときに呼ばれるイベントのリスナー関数
+     * @param {ChatInputCommandInteraction} interaction
+     */
 	async execute(interaction) {
+        await interaction.reply({ content: 'Provides informations...' });
         if (interaction.options.getSubcommand() === 'server') {
-            interaction.guild.members.cache.filter(member => console.log(member.user.bot));
-            await interaction.reply({ content: 'testmode.', ephemeral: true });
-        //     await interaction.reply({ embeds: [
-        //         new EmbedBuilder()
-        //         .setTitle(interaction.guild.name)
-        //         .setDescription('members.')
-        //         .addFields(
-        //             { name: 'AllMember:', value: `${interaction.guild.memberCount}`},
-        //             { name: 'Users:', value: `${interaction.guild.members.cache.filter(member => !member.user.bot).size}`},
-        //             { name: 'Bots:', value: `${interaction.guild.members.cache.filter(member => member.user.bot).size}`},
-        //         )
-        //         .setTimestamp(interaction.guild.createdAt)
-        //         .setThumbnail(interaction.guild.iconURL())
-        //         .setColor(Colors.Red)
-        //     ]
-        //   });
+            const members = await interaction.guild.members.fetch();
+            await interaction.editReply({ 
+                embeds: [
+                    new EmbedBuilder()
+                    .setTitle(interaction.guild.name)
+                    .setDescription('members.')
+                    .addFields(
+                        { name: 'AllMember:', value: `${interaction.guild.memberCount}`},
+                        { name: 'Users:', value: `${members.filter(member => !member.user.bot).size}`},
+                        { name: 'Bots:', value: `${members.filter(member => member.user.bot).size}`}
+                    )
+                    .setTimestamp(interaction.guild.createdAt)
+                    .setThumbnail(interaction.guild.iconURL())
+                    .setColor(Colors.Red)
+                ]
+          });
 		} else if (interaction.options.getSubcommand() === 'user') {
             const member = interaction.options.getMember('member') || interaction.member;
             const Title = member.displayName;
-                await interaction.reply({
+                await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
                         .setTitle(Title)
