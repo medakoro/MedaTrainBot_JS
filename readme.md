@@ -3,5 +3,4 @@
 .env.devの.devを消去の上、指定値を入力してください
 
 ## 今後削除するファイル
-> server.js
-> user.js
+> server.js, user.js
