@@ -4,3 +4,12 @@
 
 ## 今後削除するファイル
 > server.js, user.js
+
+## 実行コマンド
+```bash
+# Bot起動
+npm start || npm run start
+
+# コマンド適用
+npm run deploy
+```
