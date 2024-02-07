@@ -96,6 +96,7 @@ module.exports = {
 /info bot
 > 現在表示した情報です`)
                 .setFooter({ text: `all: ${userList.size + botList.size}, users: ${userList.size}, bots: ${botList.size}` })
+                .setColor(Colors.Grey)
             ] });
         }
 	},
