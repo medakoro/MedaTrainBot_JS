@@ -20,6 +20,11 @@ module.exports = {
             .setName('member')
             .setDescription('select the target.')
             )
+            )
+            .addSubcommand((subcommand) => 
+            subcommand
+            .setName('bot')
+            .setDescription('Provides interaction the tish bot.')
             ),
     /**
      * インタラクションが作成されたときに呼ばれるイベントのリスナー関数
@@ -44,7 +49,8 @@ module.exports = {
                     .setColor(Colors.Red)
                 ]
           });
-		} else if (interaction.options.getSubcommand() === 'user') {
+		}
+        if (interaction.options.getSubcommand() === 'user') {
             const member = interaction.options.getMember('member') || interaction.member;
             const Title = member.displayName;
                 await interaction.editReply({
@@ -57,5 +63,26 @@ module.exports = {
                     ]
                 });
 		}
+        if (interaction.options.getSubcommand() === 'bot') {
+            await interaction.editReply({ embeds: [
+                new EmbedBuilder()
+                .setTitle('Bot Information.')
+                .setDescription(`/trainreport add addreportchannel:<インシデント報告名>
+> インシデント報告名で問題が起きたことを知らせる
+                
+/trainreport closed 
+> インシデント報告チャンネルを解決済みにする
+
+/info server
+> 鯖についての情報を出す
+
+/info user member:<メンバー>
+> メンバーについての情報を出す
+> (なお、member:<メンバー>は任意)
+
+/info bot
+> 現在表示した情報です`)
+            ] });
+        }
 	},
 };
