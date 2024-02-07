@@ -64,8 +64,21 @@ module.exports = {
                 });
 		}
         if (interaction.options.getSubcommand() === 'bot') {
+            let userList = new Set();
+            let botList = new Set();
+            interaction.client.guilds.cache.forEach(guild => {
+                guild.members.cache.filter(member => !member.user.bot).forEach(member => {
+                  userList.add(member.user.id);
+                });
+            });
+            interaction.client.guilds.cache.forEach(guild => {
+                guild.members.cache.filter(member => member.user.bot).forEach(member => {
+                  botList.add(member.user.id);
+                });
+            });
             await interaction.editReply({ embeds: [
                 new EmbedBuilder()
+                .setAuthor({ name: `servers: ${(await interaction.client.guilds.fetch()).size}` })
                 .setTitle('Bot Information.')
                 .setDescription(`/trainreport add addreportchannel:<インシデント報告名>
 > インシデント報告名で問題が起きたことを知らせる
@@ -82,6 +95,7 @@ module.exports = {
 
 /info bot
 > 現在表示した情報です`)
+                .setFooter({ text: `all: ${userList.size + botList.size}, users: ${userList.size}, bots: ${botList.size}` })
             ] });
         }
 	},
