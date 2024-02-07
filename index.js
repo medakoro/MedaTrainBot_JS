@@ -48,6 +48,34 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
+client.on(Events.GuildMemberAdd, async member => {
+	const { guild } = member;
+	if (guild.id !== '1192783677386674256') return;
+
+	const members = await guild.members.fetch();
+	const AllMember = guild.memberCount;
+	const Users = members.filter(member => !member.user.bot).size;
+	const Bots = members.filter(member => member.user.bot).size;
+
+	guild.channels.cache.get('1204422180121747488').setName(`AllMember: ${AllMember}`);
+	guild.channels.cache.get('1204422261319274527').setName(`Users: ${Users}`);
+	guild.channels.cache.get('1204422359143157811').setName(`Bots: ${Bots}`);
+});
+
+client.on(Events.GuildMemberRemove, async member => {
+	const { guild } = member;
+	if (guild.id !== '1192783677386674256') return;
+
+	const members = await guild.members.fetch();
+	const AllMember = guild.memberCount;
+	const Users = members.filter(member => !member.user.bot).size;
+	const Bots = members.filter(member => member.user.bot).size;
+
+	guild.channels.cache.get('1204422180121747488').setName(`AllMember: ${AllMember}`);
+	guild.channels.cache.get('1204422261319274527').setName(`Users: ${Users}`);
+	guild.channels.cache.get('1204422359143157811').setName(`Bots: ${Bots}`);
+});
+
 client.login();
 
 process.on('uncaughtException', console.error);
