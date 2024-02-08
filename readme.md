@@ -10,3 +10,6 @@ npm start || npm run start
 # コマンド適用
 npm run deploy
 ```
+
+-めだころmemo-
+Announceコマンドを実装する
