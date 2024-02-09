@@ -13,10 +13,23 @@ module.exports = {
                     .setDescription('💥停止区間')
                     .setRequired(true),
                 )
+                .addStringOption((option) => option
+                    .setName('stop_reason')
+                    .setDescription('🧨原因')
+                    .setRequired(true),
+                )
+                .addStringOption((option) => option
+                    .setName('stop_repire')
+                    .setDescription('🔨予想修理時間')
+                    .setRequired(true),
+                )
         ),
     async execute(interaction) {
         if (interaction.options.getSubcommand() === 'train_stop') {
+
             const stop_section = interaction.options.getString("stop_section");
+            const stop_reason = interaction.options.getString("stop_reason");
+            const stop_repire = interaction.options.getString("stop_repire");
 
             await interaction.reply({
                 embeds: [
@@ -34,7 +47,10 @@ module.exports = {
                     {
                         title: '鉄道状態アナウンス[運転停止情報]',
                         description: '\n',
-                        fields: [{ name: '[Description]:', value: stop_section }],
+                        //fieldsがうまく反映されない(最後の予想修理時間のみ表示される)
+                        fields: [{ name: '💥停止区間:', value: stop_section ,inline: false}],
+                        fields: [{ name: '🧨原因:', value: stop_reason ,inline: false}],
+                        fields: [{ name: '🔨予想修理時間:', value: stop_repire ,inline: false}],
                         color: '15548997', 
                     }
                 ]
