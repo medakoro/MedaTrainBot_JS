@@ -73,7 +73,11 @@ module.exports = {
 		} else if (interaction.options.getSubcommand() === 'closed') {
             if (interaction.channel.parentId !== '1195712382798930022') {
                 await interaction.reply(`インシデントログでのみ実行可能です。`);
-            } else {
+            }
+            if (!interaction.member.roles.cache.has('1195719181656662148') && !interaction.member.roles.cache.has('1196278442153488485') && !interaction.member.roles.cache.has('1192986048213553213')) {
+                await interaction.reply({ content: `貴方は実行権限を持ち合わせていません。\nご不明な点があれば\`/report crwdia\`でお問い合わせください。`, ephemeral: true });
+            }
+            else {
                 await interaction.reply(`このチャンネルを閉じます・・・`);
                 await interaction.client.channels.cache.get('1195747894704209960').send({
                     content: userMention('1074320635855126538'),
