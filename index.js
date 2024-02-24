@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const discord_id = require('./id')
 require("dotenv").config();
 
 const client = new Client({ intents: Object.values(GatewayIntentBits) });
@@ -50,30 +51,31 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.on(Events.GuildMemberAdd, async member => {
 	const { guild } = member;
-	if (guild.id !== '1192783677386674256') return;
-
+	//Creadry鯖じゃなければ処理をここで切る
+	if (guild.id !== discord_id.server) return;
+	//メンバー数・ユーザー数・bot数を取得
 	const members = await guild.members.fetch();
 	const AllMember = guild.memberCount;
 	const Users = members.filter(member => !member.user.bot).size;
 	const Bots = members.filter(member => member.user.bot).size;
-
-	guild.channels.cache.get('1204422180121747488').setName(`AllMember: ${AllMember}`);
-	guild.channels.cache.get('1204422261319274527').setName(`Users: ${Users}`);
-	guild.channels.cache.get('1204422359143157811').setName(`Bots: ${Bots}`);
+	//んで変更
+	guild.channels.cache.get(discord_id.userChannels.All).setName(`AllMember: ${AllMember}`);
+	guild.channels.cache.get(discord_id.userChannels.Usr).setName(`Users: ${Users}`);
+	guild.channels.cache.get(discord_id.userChannels.Bot).setName(`Bots: ${Bots}`);
 });
 
 client.on(Events.GuildMemberRemove, async member => {
 	const { guild } = member;
-	if (guild.id !== '1192783677386674256') return;
+	if (guild.id !== discord_id.server) return;
 
 	const members = await guild.members.fetch();
 	const AllMember = guild.memberCount;
 	const Users = members.filter(member => !member.user.bot).size;
 	const Bots = members.filter(member => member.user.bot).size;
 
-	guild.channels.cache.get('1204422180121747488').setName(`AllMember: ${AllMember}`);
-	guild.channels.cache.get('1204422261319274527').setName(`Users: ${Users}`);
-	guild.channels.cache.get('1204422359143157811').setName(`Bots: ${Bots}`);
+	guild.channels.cache.get(discord_id.userChannels.All).setName(`AllMember: ${AllMember}`);
+	guild.channels.cache.get(discord_id.userChannels.Usr).setName(`Users: ${Users}`);
+	guild.channels.cache.get(discord_id.userChannels.Bot).setName(`Bots: ${Bots}`);
 });
 
 client.login();

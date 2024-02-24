@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, Colors, ChatInputCommandInteraction } = require('discord.js');
+const discord_id = require('../../id')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -34,46 +35,45 @@ module.exports = {
                     .setRequired(true),
                 )
         ),
-        /**
-     * インタラクションが作成されたときに呼ばれるイベントのリスナー関数
-     * @param {ChatInputCommandInteraction} interaction
-     */
+    /**
+ * インタラクションが作成されたときに呼ばれるイベントのリスナー関数
+ * @param {ChatInputCommandInteraction} interaction
+ */
     async execute(interaction) {
-        if (!interaction.member.roles.cache.has('1195719181656662148') && !interaction.member.roles.cache.has('1196278442153488485') && !interaction.member.roles.cache.has('1192986048213553213')) {
+        if (discord_id.IfPermissonGet(interaction)) {
             await interaction.reply({ content: `貴方は実行権限を持ち合わせていません。\nご不明な点があれば\`/report crwdia\`でお問い合わせください。`, ephemeral: true });
-        }
-        if (interaction.options.getSubcommand() === 'train_stop') {
+        } else
+            if (interaction.options.getSubcommand() === 'train_stop') {
 
-            const stop_section = interaction.options.getString("stop_section");
-            const stop_reason = interaction.options.getString("stop_reason");
-            const stop_repire = interaction.options.getString("stop_repire");
-            const stop_damage = interaction.options.getString("stop_damage");
-            const stop_discoverer = interaction.options.getMember("stop_discoverer");
+                const stop_section = interaction.options.getString("stop_section");
+                const stop_reason = interaction.options.getString("stop_reason");
+                const stop_repire = interaction.options.getString("stop_repire");
+                const stop_damage = interaction.options.getString("stop_damage");
+                const stop_discoverer = interaction.options.getMember("stop_discoverer");
 
-            await interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                    .setTitle('鉄道状態アナウンス[運転停止情報]を発表しました。')
-                    .setColor(Colors.Grey)
-                ]
-            });
-            
-            await interaction.client.channels.cache.get('1195747894704209960').send({
-                content: "📣鉄道状態アナウンスが発令されました",
-                embeds: [
-                    new EmbedBuilder()
-                    .setAuthor({ name: `通達者: ${interaction.member.displayName}` })
-                    .setTitle('鉄道状態アナウンス[運転停止情報]')
-                    .setFields([
-                        { name: '💥停止区間:', value: stop_section ,inline: false},
-                        { name: '🧨原因:', value: stop_reason ,inline: false},
-                        { name: '🔨予想修理時間:', value: stop_repire ,inline: false},
-                        { name: '🚋この影響での人的/物的被害:', value: stop_damage ,inline: false}
-                    ])
-                    .setColor(Colors.Red)
-                    .setFooter({ text: `発見者: ${stop_discoverer.displayName}` })
-                ]
-            });
-        }
+                await interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle('鉄道状態アナウンス[運転停止情報]を発表しました。')
+                            .setColor(Colors.Grey)
+                    ]
+                });
+                await interaction.client.channels.cache.get(discord_id.log).send({
+                    content: "📣鉄道状態アナウンスが発令されました",
+                    embeds: [
+                        new EmbedBuilder()
+                            .setAuthor({ name: `通達者: ${interaction.member.displayName}` })
+                            .setTitle('鉄道状態アナウンス[運転停止情報]')
+                            .setFields([
+                                { name: '💥停止区間:', value: stop_section, inline: false },
+                                { name: '🧨原因:', value: stop_reason, inline: false },
+                                { name: '🔨予想修理時間:', value: stop_repire, inline: false },
+                                { name: '🚋この影響での人的/物的被害:', value: stop_damage, inline: false }
+                            ])
+                            .setColor(Colors.Red)
+                            .setFooter({ text: `発見者: ${stop_discoverer.displayName}` })
+                    ]
+                });
+            }
     }
 };
