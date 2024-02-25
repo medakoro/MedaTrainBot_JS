@@ -85,18 +85,31 @@ module.exports = {
             const stop_info = interaction.options.getString("stop_info") ?? "なし";
 
             //現在時刻取得
-            let date = new Date();
+            var now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
             
+            var Year = now.getFullYear();
+            var Month = now.getMonth()+1;
+            var Day = now.getDate();
+            var Hour = now.getHours();
+            var Min = now.getMinutes();
+            var Sec = now.getSeconds();
+
+            var now_time = Year + "/" + Month + "/" + Day + " " + Hour + ":" + Min + ":" + Sec;
+            
+            
+            //apiにして鯖に送る
             const https = require("https"); // HTTPのモジュール
             //ここでJsonのもととなるオブジェクトを作る
             let json = { 
+                train:{
                 trainstop_information:{
                     stop_section:stop_section,
                     stop_reason:stop_reason,
                     stop_repire:stop_repire,
                     stop_info:stop_info
                 },
-                stop_train_time:date
+                stop_train_time:now_time
+            },
             }
             try {
                 const request = https.request(
