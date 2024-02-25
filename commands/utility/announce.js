@@ -24,7 +24,7 @@ module.exports = {
                 )
                 .addUserOption((option) => option
                     .setName('stop_discoverer')
-                    .setDescription('発見者')
+                    .setDescription('🙍発見者(CRWメンバーでないならMTBを選択してください)')
                     .setRequired(true),
                 )
                 .addStringOption((option) => option
@@ -84,9 +84,20 @@ module.exports = {
             const stop_discoverer = interaction.options.getMember("stop_discoverer");
             const stop_info = interaction.options.getString("stop_info") ?? "なし";
 
+            //現在時刻取得
+            let date = new Date();
+            
             const https = require("https"); // HTTPのモジュール
             //ここでJsonのもととなるオブジェクトを作る
-            let json = { text: "Put!!!" }
+            let json = { 
+                trainstop_information:{
+                    stop_section:stop_section,
+                    stop_reason:stop_reason,
+                    stop_repire:stop_repire,
+                    stop_info:stop_info
+                },
+                stop_train_time:date
+            }
             try {
                 const request = https.request(
                     //下のURLをいじる
@@ -124,11 +135,17 @@ module.exports = {
             });
         } else if (interaction.options.getSubcommand() === 'train_restart') {
             //遅延解除or運転再開
-            const restart_type = interaction.options.getString("restart_type");
+            var restart_type = interaction.options.getString("restart_type");
             const restart_section = interaction.options.getString("restart_section");
             const restart_repire = interaction.options.getString("restart_repire");
             const restart_now = interaction.options.getString("restart_now") ?? "遅延再開のためなし。";
             const restart_info = interaction.options.getString("restart_info") ?? "なし";
+
+            if (restart_type == "restart_trainstop") {
+                restart_type = "運転再開";
+            } else if (restart_type == "no_traindelay") {
+                restart_type = "遅延解除";
+            }
 
             await interaction.reply({
                 embeds: [
