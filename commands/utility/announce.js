@@ -6,7 +6,16 @@ module.exports = {
         .addSubcommand((subcommand) =>
             subcommand
                 .setName("train_stop")
-                .setDescription("鉄道状態アナウンス[運転停止情報]")
+                .setDescription("鉄道状態アナウンス[運転停止/遅延発生情報]")
+                .addStringOption((option) => option
+                    .setName('stop_type')
+                    .setDescription('今回のタイプ')
+                    .addChoices(
+                        { name: "運転停止", value: "trainstop" },
+                        { name: "遅延発生", value: "traindelay" }
+                    )
+                    .setRequired(true),
+                )
                 .addStringOption((option) => option
                     .setName('stop_section')
                     .setDescription('💥停止区間')
@@ -71,18 +80,24 @@ module.exports = {
      * インタラクションが作成されたときに呼ばれるイベントのリスナー関数
      * @param {ChatInputCommandInteraction} interaction
      */
+
+        //ロールなしエラー
     async execute(interaction) {
         if (!interaction.member.roles.cache.has('1192986404142207136')) {
             await interaction.reply({ content: `エラー:実行権限がありませんでした。\n実行権限を持ち合わせている場合、めだころかまんめんさんに連絡してください。`, ephemeral: true });
         }
         //botid = botid + 1;
+
+        //subcommand == 運転停止/遅延発生情報
         if (interaction.options.getSubcommand() === 'train_stop') {
 
+            //変数に代入
             const stop_section = interaction.options.getString("stop_section");
             const stop_reason = interaction.options.getString("stop_reason");
             const stop_repire = interaction.options.getString("stop_repire");
             const stop_discoverer = interaction.options.getMember("stop_discoverer");
             const stop_info = interaction.options.getString("stop_info") ?? "なし";
+            var stop_type =  interaction.options.getString("stop_type");
 
             //現在時刻取得
             var now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
@@ -103,6 +118,7 @@ module.exports = {
             let json = { 
                 train:{
                 trainstop_information:{
+                    type:stop_type,
                     stop_section:stop_section,
                     stop_reason:stop_reason,
                     stop_repire:stop_repire,
@@ -122,10 +138,26 @@ module.exports = {
             }
             //await interaction.editReply("putしました。")
 
+            //変数を変換
+            if (stop_type == "trainstop") {
+                stop_type = "運転停止";
+            } else if (stop_type == "traindelay") {
+                stop_type = "遅延発生";
+            } else {
+                await interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                        .setTitle('Error :', stop_type)
+                        .setColor(Colors.DarkPurple)
+                    ]
+                });
+            }
+
+            //埋め込み
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                    .setTitle('鉄道状態アナウンス[運転停止情報]を発表しました。')
+                    .setTitle('鉄道状態アナウンス[運転停止/遅延発生情報]を発表しました。')
                     .setColor(Colors.Red)
                 ]
             });
@@ -135,31 +167,44 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                     .setAuthor({ name: `通達者: ${interaction.member.displayName}` })
-                    .setTitle('鉄道状態アナウンス[運転停止情報] ID:')
+                    .setTitle('鉄道状態アナウンス[運転停止/遅延発生情報 ID:')
                     .setFields([
+                        { name: '今回のタイプ:', value: stop_type , inline: false},
                         { name: '💥停止区間:', value: stop_section ,inline: false},
                         { name: '🧨原因:', value: stop_reason ,inline: false},
                         { name: '🔨予想修理時間:', value: stop_repire ,inline: false},
                         { name: '💬詳細情報:', value: stop_info ,inline: false}
                     ])
                     .setColor(Colors.Red)
-                    .setFooter({ text: `発見者: ${stop_discoverer.displayName}` })
+                    .setFooter({ text: `発見者: ${stop_discoverer.displayName} 発表時刻: ${now_time.displayName}` })
                 ]
             });
         } else if (interaction.options.getSubcommand() === 'train_restart') {
             //遅延解除or運転再開
+
+            //変数に代入
             var restart_type = interaction.options.getString("restart_type");
             const restart_section = interaction.options.getString("restart_section");
             const restart_repire = interaction.options.getString("restart_repire");
             const restart_now = interaction.options.getString("restart_now") ?? "遅延再開のためなし。";
             const restart_info = interaction.options.getString("restart_info") ?? "なし";
 
+            //変数変換
             if (restart_type == "restart_trainstop") {
                 restart_type = "運転再開";
             } else if (restart_type == "no_traindelay") {
                 restart_type = "遅延解除";
+            } else {
+                await interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                        .setTitle('Error :', stop_type)
+                        .setColor(Colors.DarkPurple)
+                    ]
+                });
             }
 
+            //送信
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
