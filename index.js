@@ -76,6 +76,28 @@ client.on(Events.GuildMemberRemove, async member => {
 	guild.channels.cache.get('1204422359143157811').setName(`Bots: ${Bots}`);
 });
 
+const channelId = '1195747894704209960'; // 送信先のチャンネルIDを指定
+
+client.on('ready', () => {
+    console.log('Botが起動しました');
+    const channel = client.channels.cache.get(channelId);
+    if (channel) {
+        channel.send('Botが起動しました!');
+    } else {
+        console.log('指定されたチャンネルが見つかりません');
+    }
+});
+process.on('SIGINT', () => {
+    console.log('Botが終了しました');
+    const channel = client.channels.cache.get(channelId);
+    if (channel) {
+        channel.send('Botが終了しました');
+    } else {
+        console.log('指定されたチャンネルが見つかりません');
+    }
+    process.exit();
+});
+
 client.login();
 
 process.on('uncaughtException', console.error);
