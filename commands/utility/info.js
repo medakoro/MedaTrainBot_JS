@@ -80,21 +80,45 @@ module.exports = {
                 new EmbedBuilder()
                 .setAuthor({ name: `servers: ${(await interaction.client.guilds.fetch()).size}` })
                 .setTitle('Bot Information.')
-                .setDescription(`/trainreport add addreportchannel:<インシデント報告名>
-> インシデント報告名で問題が起きたことを知らせる
+                .setDescription(`<@1195631607642591252> の使い方
+                /kill yourself
+                > ???「ありえない....この私が...」
                 
-/trainreport closed 
-> インシデント報告チャンネルを解決済みにする
-
-/info server
-> 鯖についての情報を出す
-
-/info user member:<メンバー>
-> メンバーについての情報を出す
-> (なお、member:<メンバー>は任意)
-
-/info bot
-> 現在表示した情報です`)
+                /info bot
+                > botについて
+                
+                /info user member:<USER>
+                > <USER>について
+                
+                /info server
+                > この鯖について
+                
+                /mcid add addmcid:<STRING> crwmember:<USER>
+                > <STRING>というMCIDを<USER>で登録する。なお、鉄道指令以上は他人も可能
+                
+                /mcid list
+                > 現在登録されているMCIDを確認
+                
+                /role getdata user:<USER>
+                > <USER>というユーザーのタスク量を計算
+                
+                /role less lessrole:<NUMBER>
+                > <NUMBER>以下のTASK量を晒す
+                
+                /role more morerole:<NUMBER>
+                > <NUMBER>以上のTASK量を晒す
+                
+                /trainreport add addreportchannel:<STRING>
+                > <STRING>という名前でチャンネルを作成
+                
+                /trainreport closed
+                > チャンネルを閉じる
+                
+                /announce ~~~
+                > コマンド説明を見てね
+                
+                /ping test
+                > おはよう`)
                 .setFooter({ text: `all: ${userList.size + botList.size}, users: ${userList.size}, bots: ${botList.size}` })
                 .setColor(Colors.Grey)
             ] });

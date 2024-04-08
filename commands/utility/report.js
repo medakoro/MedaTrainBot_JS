@@ -5,7 +5,7 @@ module.exports = {
         //コマンド名前
         .setName('trainreport')
         //コマンドの説明
-        .setDescription('Reportコマンド。詳細はWoodry鉄道鯖、コマンドを参照')
+        .setDescription('Reportコマンド。詳細はCRW鯖、コマンドを参照')
         .addSubcommand((subcommand) =>
             subcommand
                 .setName("add")
@@ -76,7 +76,7 @@ module.exports = {
                 await interaction.reply(`インシデントログでのみ実行可能です。`);
             } else
                 if (!interaction.member.roles.cache.has('1195719181656662148') && !interaction.member.roles.cache.has('1196278442153488485') && !interaction.member.roles.cache.has('1192986048213553213')) {
-                    await interaction.reply({ content: `貴方は実行権限を持ち合わせていません。\nご不明な点があれば\`/report crwdia\`でお問い合わせください。`, ephemeral: true });
+                    await interaction.reply({ content: `エラー!:どうやらロール権限が足りないようです....もう一度ロールを確認して実行してください!`, ephemeral: true });
                 }
                 else {
                     await interaction.reply(`このチャンネルを閉じます・・・`);
