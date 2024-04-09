@@ -1,12 +1,12 @@
 const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField, ChatInputCommandInteraction } = require('discord.js');
-const discord_id = require('../../id');
+const discord_id = require('../../id')
 
 module.exports = {
     data: new SlashCommandBuilder()
         //コマンド名前
         .setName('trainreport')
         //コマンドの説明
-        .setDescription('Reportコマンド。詳細はCRW鯖、コマンドを参照')
+        .setDescription('Reportコマンド。詳細はWoodry鉄道鯖、コマンドを参照')
         .addSubcommand((subcommand) =>
             subcommand
                 .setName("add")
@@ -33,20 +33,21 @@ module.exports = {
             const addreportchannel = interaction.options.getString("addreportchannel");    //IDには、「.setName」で指定した名前を指定
             const channel = await interaction.guild.channels.create({
                 name: addreportchannel,
+                //カテゴリー指定
                 parent: discord_id.reportParent,
                 permissionOverwrites: [
-                    {
-                        id: '1192783677386674256',//everyoneっぽい...?
+                    /*{
+                        id: '1192783677386674256',
                         deny: [PermissionsBitField.Flags.ViewChannel]
                     },
                     {
-                        id: '1193112813518995538',//鉄道員っぽい...?
+                        id: '1193112813518995538',
                         allow: [PermissionsBitField.Flags.ViewChannel]
                     },
                     {
                         id: interaction.user.id,
                         allow: [PermissionsBitField.Flags.ViewChannel]
-                    }
+                    }debug - deleted*/
                 ]
             });
             await interaction.reply({
@@ -61,6 +62,7 @@ module.exports = {
                 ]
             });
             await interaction.client.channels.cache.get(discord_id.log).send({
+                //debug 1074320635855126538
                 content: userMention(discord_id.reportMember),
                 embeds: [
                     new EmbedBuilder()
@@ -76,8 +78,8 @@ module.exports = {
             if (interaction.channel.parentId !== discord_id.reportParent) {
                 await interaction.reply(`インシデントログでのみ実行可能です。`);
             } else
-                if (discord_id.IsHasNoPermisson(interaction)) {
-                    await interaction.reply({ content: `エラー!:どうやらロール権限が足りないようです....もう一度ロールを確認して実行してください!`, ephemeral: true });
+                if (discord_id.IfPermissonGet(interaction)) {
+                    await interaction.reply({ content: `貴方は実行権限を持ち合わせていません。\nご不明な点があれば\`/report crwdia\`でお問い合わせください。`, ephemeral: true });
                 }
                 else {
                     await interaction.reply(`このチャンネルを閉じます・・・`);

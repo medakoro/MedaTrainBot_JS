@@ -1,4 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, Colors, ChatInputCommandInteraction } = require('discord.js');
+const discord_id = require('../../id')
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('announce')
@@ -83,7 +85,7 @@ module.exports = {
 
     //ロールなしエラー
     async execute(interaction) {
-        if (!interaction.member.roles.cache.has('1192986404142207136')) {
+        if (discord_id.IsHasNoPermisson(interaction)) {
             await interaction.reply({ content: `エラー:実行権限がありませんでした。\n実行権限を持ち合わせている場合、めだころかまんめんさんに連絡してください。`, ephemeral: true });
         } else
             //botid = botid + 1;
@@ -162,7 +164,7 @@ module.exports = {
                     ]
                 });
 
-                await interaction.client.channels.cache.get('1195747894704209960').send({
+                await interaction.client.channels.cache.get(discord_id.log).send({
                     content: "📣鉄道状態アナウンスが発令されました",
                     embeds: [
                         new EmbedBuilder()
@@ -213,7 +215,7 @@ module.exports = {
                     ]
                 });
 
-                await interaction.client.channels.cache.get('1195747894704209960').send({
+                await interaction.client.channels.cache.get(discord_id.log).send({
                     content: "📣鉄道状態アナウンスが発令されました",
                     embeds: [
                         new EmbedBuilder()
