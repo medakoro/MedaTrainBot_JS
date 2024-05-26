@@ -1,5 +1,6 @@
 const ids =
 //default
+/*
 {
     server: '1192783677386674256',//guildID
     userChannels: {
@@ -18,11 +19,14 @@ const ids =
     TooManyTask: '1206595486711029833',//roleID
     TooLittleTask: '1226200945948627074',//roleID
     SubAccountRole: '1196399507391385613',//roleID
-    BotRole: '1195727562547138611'//roleID
+    BotRole: '1195727562547138611',//roleID
+    warn_sounds: '1244260019227070514',//channelID(Text)
+    warn_message: { "WARNING_1": "1244260442382012427", "WARNING_2": "1244260450732867635" }//channelID(Text)
 }
-
+*/
 //mameeenn_debug
-/*{
+///*
+{
     server: '1061835609477500969',//guildID
     userChannels: {
         All: '1206224311694655569',//channelID(Text/VC)
@@ -38,8 +42,10 @@ const ids =
     TooManyTask: '1226820353515458601',//roleID
     TooLittleTask: '1226820411203784766',//roleID
     SubAccountRole: '1226822395575140392',//roleID
-    BotRole: '1226822292693188690'//roleID
-}*/
+    BotRole: '1226822292693188690',//roleID
+    warn_sounds: '1244261291049222155',//channelID(Text)
+    warn_message: { "WARNING_1": "1244261418853728306", "WARNING_2": "1244261427003527179" }//channelID(Text)
+}
 //*/
 
 module.exports = {
