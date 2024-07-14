@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField, ChatInputCommandInteraction } = require('discord.js');
 const fs = require('fs');
-const discord_id = require('../../id');
+const utils = require("../../utils")
 require("dotenv").config({ path: "../../" })
 
 module.exports = {
@@ -46,9 +46,9 @@ module.exports = {
     async execute(interaction) {
         if (interaction.options.getSubcommand() === 'add') {
 
-            var addmcid = interaction.options.getString("addmcid")
-            var addmcidmember = interaction.options.getMember("crwmember")
-            if (discord_id.IsHasNoPermisson(interaction) && interaction.member.id != addmcidmember.id) {
+            const addmcid = interaction.options.getString("addmcid")
+            const addmcidmember = interaction.options.getMember("crwmember")
+            if (utils.ID.IsHasNoPermisson(interaction, utils.ID) && interaction.member.id !== addmcidmember.id) {
                 await interaction.reply({ content: "✖エラー!:\`Mismatch between MCID registrant and command executor\`\nどうやら、MCID登録者とコマンド実行者の不一致が確認されました。他人のMCIDは登録しないでください。\n(なお、管理職の場合はめだころに連絡してください)" });
             } else {
                 const testObj = {

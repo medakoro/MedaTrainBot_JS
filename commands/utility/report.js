@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField, ChatInputCommandInteraction } = require('discord.js');
-const discord_id = require('../../id');
+const utils = require("../../utils")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -33,7 +33,7 @@ module.exports = {
             const addreportchannel = interaction.options.getString("addreportchannel");    //IDには、「.setName」で指定した名前を指定
             const channel = await interaction.guild.channels.create({
                 name: addreportchannel,
-                parent: discord_id.reportParent,
+                parent: utils.ID.reportParent,
                 permissionOverwrites: [
                     {
                         id: '1192783677386674256',//everyoneっぽい...?
@@ -60,8 +60,8 @@ module.exports = {
                         .setColor(Colors.Red)
                 ]
             });
-            await interaction.client.channels.cache.get(discord_id.log).send({
-                content: userMention(discord_id.reportMember),
+            await interaction.client.channels.cache.get(utils.ID.log).send({
+                content: userMention(utils.ID.reportMember),
                 embeds: [
                     new EmbedBuilder()
                         .setTitle('インシデントが発生しました。')
@@ -73,16 +73,16 @@ module.exports = {
                 ]
             });
         } else if (interaction.options.getSubcommand() === 'closed') {
-            if (interaction.channel.parentId !== discord_id.reportParent) {
+            if (interaction.channel.parentId === utils.ID.reportParent) {
                 await interaction.reply(`インシデントログでのみ実行可能です。`);
             } else
-                if (discord_id.IsHasNoPermisson(interaction)) {
+                if (utils.ID.IsHasNoPermisson(interaction, utils.ID)) {
                     await interaction.reply({ content: `エラー!:どうやらロール権限が足りないようです....もう一度ロールを確認して実行してください!`, ephemeral: true });
                 }
                 else {
                     await interaction.reply(`このチャンネルを閉じます・・・`);
-                    await interaction.client.channels.cache.get(discord_id.log).send({
-                        content: userMention(discord_id.reportMember),
+                    await interaction.client.channels.cache.get(utils.ID.log).send({
+                        content: userMention(utils.ID.reportMember),
                         embeds: [
                             new EmbedBuilder()
                                 .setTitle('解決済み。')

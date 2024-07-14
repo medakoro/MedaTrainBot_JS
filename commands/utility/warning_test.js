@@ -1,7 +1,8 @@
 const { joinVoiceChannel, entersState, VoiceConnectionStatus, createAudioResource, StreamType,
     createAudioPlayer, AudioPlayerStatus, NoSubscriberBehavior, generateDependencyReport, AudioPlayer,
     AudioResource } = require("@discordjs/voice");
-const discord_id = require("../../id")
+const utils = require("../../utils")
+
 console.log(generateDependencyReport());
 
 const { SlashCommandBuilder, EmbedBuilder, Colors, ChatInputCommandInteraction } = require('discord.js');
@@ -22,7 +23,10 @@ module.exports = {
         const guild = interaction.guild;
         const member = await guild.members.fetch(interaction.member.id);
         const memberVC = member.voice.channel;
-
+        if (!memberVC) {
+            await interaction.reply(":x:エラー: VCに参加してください");
+            return;
+        }
 
         const connection = joinVoiceChannel({
             guildId: guild.id,
@@ -32,7 +36,7 @@ module.exports = {
         });
         await interaction.reply("Play WARNING_1...");//返信
 
-        await getAttachmentURL(interaction, discord_id.warn_sounds, discord_id.warn_message["WARNING_1"]).then(async (url) => {
+        await getAttachmentURL(interaction, utils.ID.warn_sounds, utils.ID.warn_message["WARNING_1"]).then(async (url) => {
             /*** @type {AudioResource}*/
             let resource = createAudioResource(url, {
                 inputType: StreamType.Arbitrary,
@@ -72,11 +76,11 @@ module.exports = {
                 //connection.disconnect();
             }
             for (let count = 0; count < 5; count++) {
-                await play(count == 0);
+                await play(count === 0);
                 console.log(`replay(再生回数: ${count})`)
                 //player.stop(true)
                 ////刺した状態でさらに刺すことは不可なので抜く。
-                if (count == 4) {
+                if (count === 4) {
                     connection.destroy();// 接続を切断
                 }
             }
@@ -84,15 +88,16 @@ module.exports = {
     }
 }
 /**
+ * # warning_test.js以外で使用しないでください
  * @param {ChatInputCommandInteraction} interaction 
  * @param {string} channelID 
  * @param {string} messageID 
  * @returns {Promise<string>}
  */
-let getAttachmentURL = (interaction, channelID, messageID) => {
+const getAttachmentURL = (interaction, channelID, messageID) => {
     return new Promise((resolve, reject) => {
-        interaction.guild.channels.fetch(discord_id.warn_sounds).then(channel => {
-            channel.messages.fetch(discord_id.warn_message.WARNING_1).then(message => {
+        interaction.guild.channels.fetch(utils.ID.warn_sounds).then(channel => {
+            channel.messages.fetch(utils.ID.warn_message.WARNING_1).then(message => {
                 message.attachments.map((value, key) => {
                     resolve(value.url)
                 })

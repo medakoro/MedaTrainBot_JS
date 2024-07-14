@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, Colors, ChatInputCommandInteraction } = require('discord.js');
-const discord_id = require('../../id')
+const utils = require("../../utils")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -85,12 +85,12 @@ module.exports = {
 
     //ロールなしエラー
     async execute(interaction) {
-        if (discord_id.IsHasNoPermisson(interaction)) {
+        if (utils.ID.IsHasNoPermisson(interaction, utils.ID)) {
             await interaction.reply({ content: `エラー:実行権限がありませんでした。\n実行権限を持ち合わせている場合、めだころかまんめんさんに連絡してください。`, ephemeral: true });
         } else
             //botid = botid + 1;
 
-            //subcommand == 運転停止/遅延発生情報
+            //subcommand===運転停止/遅延発生情報
             if (interaction.options.getSubcommand() === 'train_stop') {
 
                 //変数に代入
@@ -141,9 +141,9 @@ module.exports = {
                 //await interaction.editReply("putしました。")
 
                 //変数を変換
-                if (stop_type == "trainstop") {
+                if (stop_type === "trainstop") {
                     stop_type = "運転停止";
-                } else if (stop_type == "traindelay") {
+                } else if (stop_type === "traindelay") {
                     stop_type = "遅延発生";
                 } else {
                     await interaction.reply({
@@ -164,7 +164,7 @@ module.exports = {
                     ]
                 });
 
-                await interaction.client.channels.cache.get(discord_id.log).send({
+                await interaction.client.channels.cache.get(utils.ID.log).send({
                     content: "📣鉄道状態アナウンスが発令されました",
                     embeds: [
                         new EmbedBuilder()
@@ -192,9 +192,9 @@ module.exports = {
                 const restart_info = interaction.options.getString("restart_info") ?? "なし";
 
                 //変数変換
-                if (restart_type == "restart_trainstop") {
+                if (restart_type === "restart_trainstop") {
                     restart_type = "運転再開";
-                } else if (restart_type == "no_traindelay") {
+                } else if (restart_type === "no_traindelay") {
                     restart_type = "遅延解除";
                 } else {
                     await interaction.reply({
@@ -215,7 +215,7 @@ module.exports = {
                     ]
                 });
 
-                await interaction.client.channels.cache.get(discord_id.log).send({
+                await interaction.client.channels.cache.get(utils.ID.log).send({
                     content: "📣鉄道状態アナウンスが発令されました",
                     embeds: [
                         new EmbedBuilder()

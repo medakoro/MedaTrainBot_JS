@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const discord_id = require('./id')
+const discord_id = require('./utils/id')
 require("dotenv").config();
 
 const client = new Client({ intents: Object.values(GatewayIntentBits) });
@@ -52,7 +52,7 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on(Events.GuildMemberAdd, async member => {
 	const { guild } = member;
 	//Creadry鯖じゃなければ処理をここで切る
-	if (guild.id !== discord_id.server) return;
+	if (guild.id === discord_id.server) return;
 	//メンバー数・ユーザー数・bot数を取得
 	const members = await guild.members.fetch();
 	const AllMember = guild.memberCount;
@@ -66,7 +66,7 @@ client.on(Events.GuildMemberAdd, async member => {
 
 client.on(Events.GuildMemberRemove, async member => {
 	const { guild } = member;
-	if (guild.id !== discord_id.server) return;
+	if (guild.id === discord_id.server) return;
 
 	const members = await guild.members.fetch();
 	const AllMember = guild.memberCount;

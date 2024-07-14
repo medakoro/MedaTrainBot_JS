@@ -1,6 +1,20 @@
 const { SlashCommandBuilder, channelMention, userMention, EmbedBuilder, Colors, PermissionsBitField, ChatInputCommandInteraction } = require('discord.js');
-const discord_id = require('../../id');
+const utils = require("../../utils")
 
+
+const calTasks = (user) => {
+    let task = 0;
+    user.roles.cache.forEach((value, _) => {
+        switch (value.color) {
+            case 3447003: task += 2; break;
+            case 3066993: task += 1; break;
+            case 15844367: task += 3; break;
+            case 15105570: task += 4; break;
+        }
+
+    });
+    return user;
+}
 module.exports = {
     data: new SlashCommandBuilder()
         //コマンド名前
@@ -48,21 +62,11 @@ module.exports = {
 
     async execute(interaction) {
         if (interaction.options.getSubcommand() === 'getdata') {
-            let getuser = interaction.options.getUser("user")
             await interaction.deferReply()
+            const getuser = interaction.options.getUser("user")
             interaction.guild.members.fetch(getuser.id).then(user => {
-                let cache = user.roles.cache
-                let task = 0;
                 let color = "";
-                cache.forEach((value, _) => {
-                    switch (value.color) {
-                        case 3447003: task += 2; break;
-                        case 3066993: task += 1; break;
-                        case 15844367: task += 3; break;
-                        case 15105570: task += 4; break;
-                    }
-
-                });
+                const task = calTasks(user)
                 const BaseURL = "https://cdn.discordapp.com/attachments/1193112697886224384/"
                 if (task <= 2) {
                     userroletype = "BAD"
@@ -91,10 +95,10 @@ module.exports = {
                 }
                 let roletext = "NO TASK ROLE"
                 //仕事量過多なら
-                if (user.roles.cache.has(discord_id.TooManyTask)) {
+                if (user.roles.cache.has(utils.ID.TooManyTask)) {
                     roletext = "TASK MORE ROLE"
                     //仕事量過少なら
-                } else if (user.roles.cache.has(discord_id.TooLittleTask)) {
+                } else if (user.roles.cache.has(utils.ID.TooLittleTask)) {
                     roletext = "TASK LESS ROLE"
                 }
                 interaction.editReply({
@@ -110,80 +114,55 @@ module.exports = {
             })
 
         } else if (interaction.options.getSubcommand() === 'more') {
-            let more = interaction.options.getNumber("more_role") ?? 100;
+            await interaction.deferReply();
+            let more = interaction.options.getNumber("more_role");
             let highlist = [];
 
             const members = await interaction.guild.members.fetch();
-            await interaction.deferReply();
+
             members.forEach((member) => {
 
                 interaction.guild.members.fetch(member.id).then(user => {
-                    let cache = user.roles.cache
-                    let moretask = 0;
-                    cache.forEach((value, key) => {
-                        switch (value.color) {
-                            case 3447003: moretask += 2; break;
-                            case 3066993: moretask += 1; break;
-                            case 15844367: moretask += 3; break;
-                            case 15105570: moretask += 4; break;
-                        }
-                    });
+                    const moretask = calTasks(user)
                     //OR MORE
-                    if (moretask >= more && !member.roles.cache.has(discord_id.SubAccountRole) && !member.roles.cache.has(discord_id.BotRole)) {
+                    if (moretask >= more && !member.roles.cache.has(utils.ID.SubAccountRole) && !member.roles.cache.has(utils.ID.BotRole)) {
                         highlist[highlist.length] = member.displayName;
                     }
                     //最高値が指定されているか
-                    if (more != 100) {
-                        interaction.editReply({
-                            embeds: [
-                                new EmbedBuilder()
-                                    .setTitle(`TASK LEVEL ${more} OR MORE`)
-                                    .addFields([{ name: `${highlist}`, value: `TASK量${more}以上` }])
-                                    .setColor('00008b')
-                            ]
-                        });
-                    }
+                    //↑ @manmen2414:setRequestedなので設定せざるを得ません
+                    interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle(`TASK LEVEL ${more} OR MORE`)
+                                .addFields([{ name: `${highlist}`, value: `TASK量${more}以上` }])
+                                .setColor('00008b')
+                        ]
+                    });
                 })
             })
-
-
-
         } else if (interaction.options.getSubcommand() === 'less') {
-            let less = interaction.options.getNumber("less_role") ?? -1;
+            let less = interaction.options.getNumber("less_role");
             let badlist = [];
             const members = await interaction.guild.members.fetch();
             await interaction.deferReply();
             members.forEach((member) => {
-
                 interaction.guild.members.fetch(member.id).then(user => {
-                    let cache = user.roles.cache
-                    let task = 0;
-                    cache.forEach((value, key) => {
-                        switch (value.color) {
-                            case 3447003: task += 2; break;
-                            case 3066993: task += 1; break;
-                            case 15844367: task += 3; break;
-                            case 15105570: task += 4; break;
-                        }
-
-
-                    });
+                    const task = calTasks(user)
                     //OR LESS
                     //もしタスク量が指定量に満たなかった場合、botロールかつさーぶあかロールを保持していない場合
-                    if (task <= less && !member.roles.cache.has(discord_id.SubAccountRole) && !member.roles.cache.has(discord_id.BotRole)) {
+                    if (task <= less && !member.roles.cache.has(utils.ID.SubAccountRole) && !member.roles.cache.has(utils.ID.BotRole)) {
                         badlist[badlist.length] = member.displayName;
                     }
                     //最低値が指定されているか
-                    if (less != -1) {
-                        interaction.editReply({
-                            embeds: [
-                                new EmbedBuilder()
-                                    .setTitle(`TASK LEVEL ${less} OR LESS`)
-                                    .addFields([{ name: `${badlist}`, value: `TASK量${less}以下` }])
-                                    .setColor('8b0000')
-                            ]
-                        });
-                    }
+                    //↑ @manmen2414:setRequestedなので設定せ(ry
+                    interaction.editReply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setTitle(`TASK LEVEL ${less} OR LESS`)
+                                .addFields([{ name: `${badlist}`, value: `TASK量${less}以下` }])
+                                .setColor('8b0000')
+                        ]
+                    });
                 })
             })
         }
