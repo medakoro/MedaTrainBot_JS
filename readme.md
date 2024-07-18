@@ -10,6 +10,4 @@ npm start || npm run start
 # コマンド適用
 npm run deploy
 ```
-
--めだころmemo-
-Announceコマンドを実装する
+もしくはこの中に入っている"MTB-Start.bat"ファイルを起動して"1か2"を入力してください
