@@ -32,7 +32,7 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 // and deploy your commands!
 (async () => {
 	try {
-		console.log(`Started refreshing ${commands.length} application (/) commands.`);
+		console.log(` ${commands.length} つのコマンドを読み込んでいます...!`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const data = await rest.put(
@@ -40,7 +40,7 @@ const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 			{ body: commands },
 		);
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+		console.log(`成功!:${data.length}つのコマンドが読み込まれました!`);
 	} catch (error) {
 		// And of course, make sure you catch and log any errors!
 		console.error(error);

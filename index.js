@@ -1,7 +1,18 @@
+/*
+# delectory select
+cd C:\Users\user\Desktop\DiscordBots\MedaTrainBot_JS-main
+
+# command refresh
+npm run deploy
+
+# bot start
+npm start
+
+*/
+
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const discord_id = require('./utils/id')
+const { Client, Collection, Events, GatewayIntentBits,ActivityType } = require('discord.js');
 require("dotenv").config();
 
 const client = new Client({ intents: Object.values(GatewayIntentBits) });
@@ -25,7 +36,7 @@ for (const folder of commandFolders) {
 }
 
 client.once(Events.ClientReady, readyClient => {
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+	console.log(`準備OK! ${readyClient.user.tag}が起動しました!`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -42,41 +53,23 @@ client.on(Events.InteractionCreate, async interaction => {
 	} catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+			await interaction.followUp({ content: 'エラーが発生したようです!', ephemeral: true });
 		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			await interaction.reply({ content: 'エラーが発生したようです!', ephemeral: true });
 		}
 	}
 });
 
-client.on(Events.GuildMemberAdd, async member => {
-	const { guild } = member;
-	//Creadry鯖じゃなければ処理をここで切る
-	if (guild.id === discord_id.server) return;
-	//メンバー数・ユーザー数・bot数を取得
-	const members = await guild.members.fetch();
-	const AllMember = guild.memberCount;
-	const Users = members.filter(member => !member.user.bot).size;
-	const Bots = members.filter(member => member.user.bot).size;
-	//んで変更
-	guild.channels.cache.get(discord_id.userChannels.All).setName(`AllMember: ${AllMember}`);
-	guild.channels.cache.get(discord_id.userChannels.Usr).setName(`Users: ${Users}`);
-	guild.channels.cache.get(discord_id.userChannels.Bot).setName(`Bots: ${Bots}`);
-});
 
-client.on(Events.GuildMemberRemove, async member => {
-	const { guild } = member;
-	if (guild.id === discord_id.server) return;
+client.on('ready', () => {
+setInterval(() => {
+    client.user.setActivity(
+    `${client.ws.ping}ms遅延`,
+    { type: ActivityType.Watching }
+    )
+}, 1000)
+})
 
-	const members = await guild.members.fetch();
-	const AllMember = guild.memberCount;
-	const Users = members.filter(member => !member.user.bot).size;
-	const Bots = members.filter(member => member.user.bot).size;
-
-	guild.channels.cache.get(discord_id.userChannels.All).setName(`AllMember: ${AllMember}`);
-	guild.channels.cache.get(discord_id.userChannels.Usr).setName(`Users: ${Users}`);
-	guild.channels.cache.get(discord_id.userChannels.Bot).setName(`Bots: ${Bots}`);
-});
 
 client.login();
 
